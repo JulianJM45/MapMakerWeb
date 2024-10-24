@@ -43,7 +43,7 @@ def getMap(index, coordinates, MAP_STYLE, ZOOM):
     map_image=label(map_image, s_pixel, index)
     map_image = draw_firepits(map_image, coordinates, s_pixel)
     # map_image.show()
-    map_image.save(f'MyMaps/MyMap{index + 1}.png')
+    map_image.save(f'MyMaps/Map{index + 1}.png')
     # return map_image
 
 

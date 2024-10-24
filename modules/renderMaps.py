@@ -1,17 +1,18 @@
 import os
 import subprocess
-# import platform
 import zipfile
 import io
-
+import shutil
 import re
 import img2pdf
 
 from .get_map import *
-from app import send_message_to_js
+from utils import send_message_to_js
+
 
 
 def render_maps(coordinates_list, config):
+
     MAP_STYLE = config['tile_layer']
     WIDTH = config['width']
     HEIGHT = config['height']
@@ -43,17 +44,17 @@ def render_maps(coordinates_list, config):
         # Extract and assign the coordinates to separate variables
         
         if index % 2 == 0:
-            odd_maps.append(f'MyMaps/MyMap{index + 1}.png')
-        else: even_maps.append(f'MyMaps/MyMap{index + 1}.png')
+            odd_maps.append(f'MyMaps/Map{index + 1}.png')
+        else: even_maps.append(f'MyMaps/Map{index + 1}.png')
         if Overview: 
             overviewImage = drawMapInOverview(overviewImage, ovmc, coordinates, index)
 
     # Delete the "tiles" directory and its contents
     if os.path.exists("tiles"):
-        import shutil
         shutil.rmtree("tiles")
-    print('download finished :)')
-    send_message_to_js("Download finished")
+        # pass
+    print('Maps prepared :)')
+    send_message_to_js("Maps prepared")
 
 
     # Upscale the images if applicable
@@ -87,7 +88,7 @@ def render_maps(coordinates_list, config):
     if os.path.exists("MyMaps"):
         shutil.rmtree("MyMaps")
 
-    send_message_to_js("Downloading Maps :)")
+    send_message_to_js("Downloading Maps ...")
 
     return Maps, file_type
 

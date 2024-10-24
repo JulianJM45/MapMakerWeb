@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, send_file
 from flask_socketio import SocketIO
+from utils import socketio, send_message_to_js
+from modules.renderMaps import render_maps
 
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+# socketio = SocketIO(app)
+socketio.init_app(app)
 
 
 @app.route('/')
@@ -11,11 +14,10 @@ def index():
     return render_template('index.html')
 
 
-def send_message_to_js(message):
-    socketio.emit('py-js_communication', message)
+# def send_message_to_js(message):
+#     socketio.emit('py-js_communication', message)
 
 
-from modules.renderMaps import render_maps
 
 
 
@@ -29,6 +31,7 @@ def send_coordinates():
 
     # print(f'Coordinates received: {coordinates_list}')
     # print(f'Config received: {config}')
+
     # Generate the file (ZIP, PDF, or PNG)
     Maps, file_type = render_maps(coordinates_list, config)
     
@@ -50,4 +53,5 @@ def send_coordinates():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run()

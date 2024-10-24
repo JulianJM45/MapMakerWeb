@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     // #1 add map
-//    var map = L.map('map').setView([50.604, 10.887], 7);
-   var map = L.map('map').setView([49.3497, 8.1429], 12);
+   var map = L.map('map').setView([50.604, 10.887], 7);
+//    var map = L.map('map').setView([49.3497, 8.1429], 12);
    
    var openTopoMapLayer = L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png', {
        name: 'tile.opentopomap.org' // Set the name property
@@ -319,6 +319,8 @@ document.addEventListener('DOMContentLoaded', function() {
    
    
    // #6 send coordinates
+
+   let filename = 'test_name.png';
    
    document.getElementById('download-button').addEventListener('click', function(event) {
        event.preventDefault();
@@ -351,6 +353,17 @@ document.addEventListener('DOMContentLoaded', function() {
                coordinates_List.push(coordinates);
            }
        });
+        
+       // adapt filename
+        if (coordinates_List.length > 1 || config.overview) {
+            filename = 'Tour.zip';
+        }
+        else if (config.pdf) {
+            filename = 'Tour.pdf';
+        }
+        else {
+            filename = 'Map.png';
+        }
    
        // Get the currently selected tile layer
        var selectedTileLayer = null;
@@ -364,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                }
            }
        });
-       selectedTileLayer = 'a.tile.openstreetmap.de';
+    //    selectedTileLayer = 'a.tile.openstreetmap.de';
    
        // Prepare the data to be sent
        var data = {
@@ -395,21 +408,20 @@ document.addEventListener('DOMContentLoaded', function() {
            },
            body: JSON.stringify(data)
        })
-       .then(response => response.blob())
-       .then(blob => {
-           // Create a downloadable file
-           var url = URL.createObjectURL(blob);
-           var a = document.createElement('a');
-           a.href = url;
-        //    a.download = 'MyMaps.zip';
-           document.body.appendChild(a);
-           a.click();
-           document.body.removeChild(a);
-       })
-       .catch((error) => {
-           console.error('Error:', error);
-           showMessage('An error occurred while sending the coordinates.');
-       });
+
+        .then(response => response.blob() )
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            // showMessage(filename)
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            showMessage('Download finished :)');
+        })
    }
    
    
